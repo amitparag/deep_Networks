@@ -1,4 +1,4 @@
-import random 
+import random
 try:
    from six.moves import cPickle
 except:
@@ -12,19 +12,19 @@ random.seed(20119)
 class _Generator:
     """
     Abstract Class to generate trajectories from Crocoddyl for Unicycle
-    
+
     """
-     
-        
+
+
     def generate_trajectories(self, trajectories: int, save: bool):
         raise NotImplementedError
 
-        
+
 class data(_Generator):
     """
     Child class of the abstract generator class
     """
-    
+
     def __init__(self, n_trajectories: int = 10, state_weight: float = 1., control_weight: float = 0.3, nodes: int = 20):
         """
         @ Description:
@@ -36,17 +36,17 @@ class data(_Generator):
         self.state_weight = state_weight
         self.control_weight = control_weight
         self.knots = nodes
-        
-        
+
+
     def generate_trajectories(self, save: bool = False):
         """
         This could be done better with pool. But since we are generating a maximum of 10K trajectories, there' no need for pool
         """
-        
+
         starting_configurations = []
         optimal_trajectories = []
         feasible_trajectories = 0
-        for _ in range(self.n_trajectories):            
+        for _ in range(self.n_trajectories):
             initial_config = np.matrix([random.uniform(-2.1, 2.), random.uniform(-2.1, 2.), random.uniform(0, 1)]).T
             model = crocoddyl.ActionModelUnicycle()
             model.costWeights = np.matrix([self.state_weight, self.control_weight]).T
@@ -65,7 +65,7 @@ class data(_Generator):
                 optimal_trajectory = np.hstack((x, y, theta, velocity, torque))
                 starting_configurations.append(np.squeeze(np.asarray(initial_config)))
                 optimal_trajectories.append(optimal_trajectory)
-             
+
         starting_configurations = np.asarray(starting_configurations)
         optimal_trajectories = np.asarray(optimal_trajectories)
         if save:
@@ -74,14 +74,14 @@ class data(_Generator):
             g = open("../data/y_data.pkl", "wb")
             cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
             f.close(), g.close()
-            del starting_configurations, optimal_trajectories
             
-        else:
-            return starting_configurations, optimal_trajectories, feasible_trajectories     
-                
-            
-        
 
-        
+
+        return starting_configurations, optimal_trajectories, feasible_trajectories
+
+
+
+
+
 data = data(10000)
-starting_configurations, optimal_trajectories, correct = data.generate_trajectories(save = False)
+starting_configurations, optimal_trajectories, correct = data.generate_trajectories(save = True)
