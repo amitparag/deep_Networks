@@ -1,3 +1,7 @@
+"""
+This file generates a number of optimal trajectories for unicycle in crocoddyl.
+"""
+
 import random
 try:
    from six.moves import cPickle
@@ -74,7 +78,7 @@ class data(_Generator):
             g = open("../data/y_data.pkl", "wb")
             cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
             f.close(), g.close()
-            
+
 
 
         return starting_configurations, optimal_trajectories, feasible_trajectories
