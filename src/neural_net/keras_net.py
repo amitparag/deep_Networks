@@ -24,7 +24,7 @@ class regression():
         self.__state_weight = state_weight
         self.__control_weight = control_weight
         self.__nodes = nodes
-        self.__n_hidden = n_hidden,
+        self.__n_hidden = n_hidden
         self.save_trajectories = save_trajectories
         self.save_model = save_model
         self.plot = plot
@@ -83,7 +83,7 @@ class regression():
         model = Sequential()
         model.add(Dense(256, input_dim=(starting_configurations.shape[1])))
         model.add(Activation('relu'))
-        for _ in range(5):
+        for _ in range(self.__n_hidden):
             model.add(Dense(256,
                             activation = "tanh",
                             kernel_initializer='random_uniform',
@@ -111,7 +111,8 @@ class regression():
         score = model.evaluate(x_test, y_test, batch_size = 16, use_multiprocessing=True)
         
         print(score)
+        return model
         
 if __name__=='__main__':
         regression = regression()
-        regression.keras_net()
+        neural_net = regression.keras_net()
