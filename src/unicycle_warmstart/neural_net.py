@@ -21,9 +21,9 @@ class train_net():
                  state_weight: float = 1., # can use random.uniform(1, 3)
                  control_weight: float = 0.3, # can use random.uniform(0,1)
                  nodes: int = 20,
-                 n_hidden: int = 4,
+                 n_hidden: int = 5,
                  neurons: int = 256,
-                 optimizer: str = 'sgd',
+                 optimizer: str = 'rms',
                  save_trajectories: bool = False,
                  save_model: bool = False,
                  plot: bool = False):
@@ -135,11 +135,19 @@ class train_net():
                         activation = 'linear'))        
         
      
-        
+        rms = optimizers.RMSprop(learning_rate=0.001, rho=0.9)
+   
         sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
-        model.compile(loss='mean_squared_error',
-              optimizer=sgd,
-              metrics=['mean_squared_error', "mean_absolute_error"])
+    
+        if self.optimizer == 'sgd':
+            model.compile(loss='mean_squared_error',
+                      optimizer=sgd,
+                      metrics=['mean_squared_error', "mean_absolute_error"])
+            
+        else :
+            model.compile(loss='mean_squared_error',
+                      optimizer=rms,
+                      metrics=['mean_squared_error', "mean_absolute_error"])    
         
         print(f'Training neural net on {self.__n_trajectories}...')
         
@@ -155,7 +163,7 @@ class train_net():
         #print(score)
         print(self.__nodes)
         if self.save_model:
-            model.save('model.h5')  # creates a HDF5 file 'my_model.h5'
+            model.save('model.h5')  
             
         
         return model
@@ -163,5 +171,5 @@ class train_net():
         
         
 if __name__=='__main__':
-    net = train_net(save_model = True)
+    net = train_net(save_model = False)
     neuralNet = net.generate_trained_net()
