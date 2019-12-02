@@ -1,4 +1,4 @@
-
+# https://wltrimbl.github.io/2014-06-10-spelman/intermediate/python/04-multiprocessing.html
 import os
 from multiprocessing import Process, current_process
 import numpy as np
@@ -13,7 +13,11 @@ print(device_lib.list_local_devices())
 crocoddyl.switchToNumpyArray()
 import random
 from model_cartpole import *
-from tqdm import tqdm
+try:
+   from six.moves import cPickle
+except:
+   import pickle as cPickle
+import timeit
 
 
 def get_trajectories(ntraj: int = 2):
@@ -24,7 +28,7 @@ def get_trajectories(ntraj: int = 2):
     """
     initial_state = []
     trajectory = []
-    for _ in tqdm(range(ntraj)):
+    for _ in range(ntraj):
         
         model = cartpole_model()
 
@@ -35,18 +39,19 @@ def get_trajectories(ntraj: int = 2):
         problem = crocoddyl.ShootingProblem(np.matrix(x0).T, [ model ]*T, model)
         ddp = crocoddyl.SolverDDP(problem)
         # Solving this problem
-        done = ddp.solve([], [], 1000)
+        done = ddp.solve([], [], 100)
         del ddp.xs[0]
 
         y = [np.append(np.array(i).T, j) for i, j in zip(ddp.xs, ddp.us)]
         initial_state.append(x0)
-        trajectory.append(np.array(y).flatten())     
+        trajectory.append(np.array(y).flatten())
+        print(_)
         
     initial_state = np.asarray(initial_state)
     trajectory = np.asarray(trajectory)
     return initial_state, trajectory
 
-def train_net(n_hidden: int = 4, traj:int = 10000, save_model: bool = False):
+def train_net(n_hidden: int = 4, traj:int = 1000, save_model: bool = False, save_data:bool = True):
     """
     A generic keras 4 hidden layered neural net with RMSprop as optimizer
     Each Layer has 256 neurons.
@@ -54,6 +59,12 @@ def train_net(n_hidden: int = 4, traj:int = 10000, save_model: bool = False):
     """
     
     x_data, y_data = get_trajectories(ntraj = traj)
+    if save_data:
+        f = open('x_data.pkl', 'wb')
+        cPickle.dump(x_data, f, protocol=cPickle.HIGHEST_PROTOCOL)
+        g = open("y_data.pkl", "wb")
+        cPickle.dump(y_data, g, protocol=cPickle.HIGHEST_PROTOCOL)
+        f.close(), g.close()
     print("Generated data") 
     print(f"shape of x_train {x_data.shape}, y_data {y_data.shape}")
     print("training")
@@ -100,25 +111,30 @@ def train_net(n_hidden: int = 4, traj:int = 10000, save_model: bool = False):
     else: return model
     
 if __name__=='__main__':
+    #import os
+    #from multiprocessing import Process, current_process
+    import numpy as np
+    import timeit
+    start = timeit.timeit()
+
     
-    """
-    processes = []
+    #processes = []
     #numbers = [1, 2, 3, 4]
-    numbers = range(1000)
+    #numbers = range(1000)
     # Spawn 50 processes
-    for _ in range(50):
-        process = Process(target=train_net, args = (5, 2, True,))
+    #for _ in range(50):
+     #   process = Process(target=train_net, args = (5, 10000, True,True))
         #square(number)
-        processes.append(process)
+      #  processes.append(process)
         # Processes are spawned by creating a process object and then calling its start method
-        process.start()
+       # process.start()
 
 
     # make use of .join method to make sure that all processes have finished before we run any further code
-    for process in processes:
-        process.join()
-    """
-    train_net(save_model=True)
-    print("Done") 
+    #for process in processes:
+     #   process.join()
+    train_net(5, 1000, save_model=True, save_data = True)
 
-    
+    end = timeit.timeit()
+
+    print(f"Done in {end - start}")
