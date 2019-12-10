@@ -57,13 +57,15 @@ class unicycle_data():
 
 
         if save:
-            f = open('./data/variable_initial_state/initial_state.pkl', 'wb')
+            f = open('./data/variable_initial_state/starting_configurations.pkl', 'wb')
             cPickle.dump(starting_configurations, f, protocol=cPickle.HIGHEST_PROTOCOL)
-            g = open("./data/variable_initial_state/trajectory.pkl", "wb")
+            
+            g = open("./data/variable_initial_state/optimal_trajectories.pkl", "wb")
             cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
 
             h = open("./data/variable_initial_state/control.pkl", "wb")
             cPickle.dump(controls, h, protocol=cPickle.HIGHEST_PROTOCOL)
+            
             f.close(), g.close(), h.close()
 
 
@@ -98,14 +100,18 @@ class unicycle_data():
 
 
         if save:
-            f = open('./data/constant_theta/initial_state.pkl', 'wb')
+            f = open('./data/constant_theta/starting_configurations.pkl', 'wb')
             cPickle.dump(starting_configurations, f, protocol=cPickle.HIGHEST_PROTOCOL)
-            g = open("./data/variable_initial_state/trajectory.pkl", "wb")
-            cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
             
+            g = open("./data/constant_theta/optimal_trajectories.pkl", "wb")
+            cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
+
             h = open("./data/constant_theta/control.pkl", "wb")
             cPickle.dump(controls, h, protocol=cPickle.HIGHEST_PROTOCOL)
+            
             f.close(), g.close(), h.close()
+
+
 
 
         else: 
@@ -138,14 +144,17 @@ class unicycle_data():
 
 
         if save:
-            f = open('./data/constant_y/initial_state.pkl', 'wb')
+            f = open('./data/constant_y/starting_configurations.pkl', 'wb')
             cPickle.dump(starting_configurations, f, protocol=cPickle.HIGHEST_PROTOCOL)
-            g = open("./data/variable_initial_state/trajectory.pkl", "wb")
-            cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
             
+            g = open("./data/constant_y/optimal_trajectories.pkl", "wb")
+            cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
+
             h = open("./data/constant_y/control.pkl", "wb")
             cPickle.dump(controls, h, protocol=cPickle.HIGHEST_PROTOCOL)
+            
             f.close(), g.close(), h.close()
+
 
 
         else: 
@@ -179,14 +188,17 @@ class unicycle_data():
 
 
         if save:
-            f = open('./data/constant_x/initial_state.pkl', 'wb')
+            f = open('./data/constant_x/starting_configurations.pkl', 'wb')
             cPickle.dump(starting_configurations, f, protocol=cPickle.HIGHEST_PROTOCOL)
-            g = open("./data/constant_x/trajectory.pkl", "wb")
-            cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
             
+            g = open("./data/constant_x/optimal_trajectories.pkl", "wb")
+            cPickle.dump(optimal_trajectories, g, protocol=cPickle.HIGHEST_PROTOCOL)
+
             h = open("./data/constant_x/control.pkl", "wb")
             cPickle.dump(controls, h, protocol=cPickle.HIGHEST_PROTOCOL)
+            
             f.close(), g.close(), h.close()
+
 
 
         else: 
