@@ -1,3 +1,5 @@
+"No idea why git is not uploading all files"
+
 Each folder contains three separate files: starting_configurations , trajectory, control.
 
 Note that in Crocoddyl, ddp.xs contains T + 1 terms, while ddp.us contains T terms. The extra term in ddp.xs is the initial starting point.
