@@ -1,4 +1,6 @@
-
+#import os
+#os.environ["CUDA_VISIBLE_DEVICES"]="-1"   
+import tensorflow as tf
 import numpy as np
 import random
 from keras import regularizers
@@ -6,8 +8,6 @@ from keras import optimizers
 from keras.models import Sequential
 from keras.layers import Dense, Activation, Dropout
 import crocoddyl
-from tensorflow.python.client import device_lib
-print(device_lib.list_local_devices())
 crocoddyl.switchToNumpyArray()
 random.seed(1)
 
@@ -21,7 +21,7 @@ class train_net():
                  state_weight: float = 1., # can use random.uniform(1, 3)
                  control_weight: float = 0.3, # can use random.uniform(0,1)
                  nodes: int = 20,
-                 n_hidden: int = 5,
+                 n_hidden: int = 4,
                  neurons: int = 256,
                  optimizer: str = 'rms',
                  save_trajectories: bool = False,
@@ -125,17 +125,17 @@ class train_net():
         model.add(Activation('relu'))
         for _ in range(self.__n_hidden):
             model.add(Dense(256,
-                            activation = "tanh",
+                            activation = "relu",
                             kernel_initializer='random_uniform',
                             kernel_regularizer=regularizers.l2(0.01),
                             activity_regularizer=regularizers.l1(0.01)))            
             model.add(Dropout(0.25))
             
         model.add(Dense(optimal_trajectories.shape[1], 
-                        activation = 'linear'))        
+                        activation = 'tanh'))        
         
      
-        rms = optimizers.RMSprop(learning_rate=0.001, rho=0.9)
+        rms = optimizers.RMSprop(lr = 0.001, rho=0.9)
    
         sgd = optimizers.SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     
@@ -147,7 +147,7 @@ class train_net():
         else :
             model.compile(loss='mean_squared_error',
                       optimizer=rms,
-                      metrics=['mean_squared_error', "mean_absolute_error"])    
+                      metrics=['mean_squared_error'])    
         
         print(f'Training neural net on {self.__n_trajectories}...')
         
@@ -155,11 +155,10 @@ class train_net():
                   y_train,
                   epochs = 200,
                   batch_size= 16,
-                  verbose = 0
+                  verbose = 1
                   )
         
-        score = model.evaluate(x_test, y_test, batch_size = 16, use_multiprocessing=True)
-        
+      
         #print(score)
         print(self.__nodes)
         if self.save_model:
