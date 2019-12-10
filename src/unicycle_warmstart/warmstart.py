@@ -55,7 +55,7 @@ class warmstart():
             for _ in  range(us.shape[0]):
                 ddp_us.append(np.matrix(us[_]).T)
 
-            ddp.solve(ddp_xs, ddp_us)
+            ddp.solve([], ddp_us)
             ddp2.solve()
             print(f" With warmstart, without warmstart ")
             print(ddp.iter, "  ", ddp2.iter)

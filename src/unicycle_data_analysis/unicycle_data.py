@@ -211,9 +211,6 @@ class unicycle_data():
         """
 
         pass
-    
- 
-
 if __name__ == "__main__":    
     unicycle = unicycle_data()
     unicycle.generate_trajectories_random_xyz(save = True)
