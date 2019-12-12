@@ -7,7 +7,7 @@ def iter_analysis():
     for _ in range(10000):
         initial_config = [random.uniform(-2.1, 2.1), random.uniform(-2.1, 2.1), 0]            
         model = crocoddyl.ActionModelUnicycle()
-        model.costWeights = np.matrix([1, 0.3]).T
+        model.costWeights = np.matrix([4, 0.3]).T
 
         problem = crocoddyl.ShootingProblem(np.matrix(initial_config).T, [ model ] * 20, model)
         ddp = crocoddyl.SolverDDP(problem)
@@ -26,7 +26,7 @@ def iter_analysis():
     for _ in range(10000):
         initial_config = [random.uniform(-2.1, 2.1), random.uniform(-2.1, 2.1), 0]            
         model = crocoddyl.ActionModelUnicycle()
-        model.costWeights = np.matrix([1, 0.3]).T
+        model.costWeights = np.matrix([4, 0.3]).T
 
         problem = crocoddyl.ShootingProblem(np.matrix(initial_config).T, [ model ] * 20, model)
         ddp = crocoddyl.SolverDDP(problem)
@@ -37,7 +37,7 @@ def iter_analysis():
     for _ in range(10000):
         initial_config = [random.uniform(-2.1, 2.1), random.uniform(-2.1, 2.1), 0]            
         model = crocoddyl.ActionModelUnicycle()
-        model.costWeights = np.matrix([1, 0.3]).T
+        model.costWeights = np.matrix([4, 0.3]).T
 
         problem = crocoddyl.ShootingProblem(np.matrix(initial_config).T, [ model ] * 20, model)
         ddp = crocoddyl.SolverDDP(problem)
@@ -47,17 +47,21 @@ def iter_analysis():
     failure = 0
     for i in zip(iters, iters_1000, iters_500):        
         if not (i[0] == i[1] == i[2]): failure += 1
-    print("First: \n")        
-    print(f"Variance of ddp.iter. For same initial points, ddp.iter remains largely the same, i.e. for a particular x, y, theta , ddp.solve([], [], 100/500/1000) gives the same ddp.iter. \nThis is expected, however, does not give the same result in a few cases. In this example it crocoddyl failed in {failure} instances over 10 k points.\n")
+    print("First:\n")        
+    print(f"Variance of ddp.iter. For same initial points, ddp.iter remains largely the same \
+    i.e. for a particular x, y, theta , ddp.solve([], [], 100/500/1000) gives the same ddp.iter. \nThis is expected, however, \
+    does not give the same result in a few cases.\n \
+    In this example it crocoddyl failed in {failure} instances over 10 k points.\n")
     
     print(".......................................................................\n")
-    print("Second: \n")
+    print("Second:\n")
+    print("Randomly generate 10K points thrice. ")
     
-    
-    print(f"Allowed iterations : 100  |  Minimum: {min(iters)}  |  Maximum: {max(iters)}  | Average: {np.mean(iters)} ")
-    print(f"Allowed iterations : 500  |  Minimum: {min(iters_500)}  |  Maximum: {max(iters_500)}  | Average: {np.mean(iters_500)} ")
-    print(f"Allowed iterations : 1000 |  Minimum: {min(iters_1000)}  |  Maximum: {max(iters_1000)}  | Average: {np.mean(iters_1000)} ")
+    print(f"Allowed iterations : 100  |  Minimum: {min(iters)}       |  Maximum: {max(iters)}       | Average: {np.mean(iters)} |")
+    print(f"Allowed iterations : 500  |  Minimum: {min(iters_500)}   |  Maximum: {max(iters_500)}   | Average: {np.mean(iters_500)} |")
+    print(f"Allowed iterations : 1000 |  Minimum: {min(iters_1000)}  |  Maximum: {max(iters_1000)} | Average: {np.mean(iters_1000)} |")
     del iters, iters_500, iters_1000, allowed_iterations_500, allowed_iterations_1000
     
     
 #iter_analysis()
+
