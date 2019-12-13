@@ -38,40 +38,29 @@ class DifferentialActionModelCartpole(crocoddyl.DifferentialActionModelAbstract)
         # Advance user might implement the derivatives
         pass
 
-cartpoleDAM = DifferentialActionModelCartpole()
-cartpoleData = cartpoleDAM.createData()
-x = cartpoleDAM.state.rand()
-u = np.zeros(1)
-cartpoleDAM.calc(cartpoleData, x, u)
+def cartpole_model():    
 
-cartpoleND = crocoddyl.DifferentialActionModelNumDiff(cartpoleDAM, True) 
+    cartpoleDAM = DifferentialActionModelCartpole()
+    cartpoleData = cartpoleDAM.createData()
+    x = cartpoleDAM.state.rand()
+    u = np.zeros(1)
+    cartpoleDAM.calc(cartpoleData,x,u)
 
-timeStep = 5e-2
-cartpoleIAM = crocoddyl.IntegratedActionModelEuler(cartpoleND, timeStep)
+    cartpoleND = crocoddyl.DifferentialActionModelNumDiff(cartpoleDAM, True) 
 
- # Fill the number of knots (T) and the time step (dt)
-x0 = np.matrix([ 0.5, 1.14, 0.4, -0.1 ]).T
-T  = 200
-problem = crocoddyl.ShootingProblem(x0, [ cartpoleIAM ]*T, cartpoleIAM)
+    timeStep = 5e-4
+    cartpoleIAM = crocoddyl.IntegratedActionModelEuler(cartpoleND, timeStep)
 
-us = [ pinocchio.utils.zero(cartpoleIAM.differential.nu) ]*T
-xs = problem.rollout(us)
 
-#%%capture
-#%matplotlib inline
-from cartpole_utils import animateCartpole
-anim = animateCartpole(xs)
+    terminalCartpole = DifferentialActionModelCartpole()
+    terminalCartpoleDAM = crocoddyl.DifferentialActionModelNumDiff(terminalCartpole, True)
+    terminalCartpoleIAM = crocoddyl.IntegratedActionModelEuler(terminalCartpoleDAM)
 
-# from IPython.display import HTML
-# HTML(anim.to_jshtml())
-HTML(anim.to_html5_video())
-
- # Creating the DDP solver
-ddp = crocoddyl.SolverDDP(problem)
-ddp.setCallbacks([crocoddyl.CallbackVerbose()])
-
-# Solving this problem
-ddp.solve([],[],1000)
-HTML(animateCartpole(ddp.xs).to_html5_video())
-
+    terminalCartpole.costWeights[0] = 1
+    terminalCartpole.costWeights[1] = 100
+    terminalCartpole.costWeights[2] = 1.
+    terminalCartpole.costWeights[3] = 0.1
+    terminalCartpole.costWeights[4] = 0.01
+    terminalCartpole.costWeights[5] = 0.0001
+    return cartpoleIAM
 
