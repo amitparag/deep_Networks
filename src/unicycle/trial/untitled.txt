@@ -1,0 +1,16 @@
+TODO
+
+https://stackoverflow.com/questions/18764814/make-contour-of-scatter
+
+
+1. Plot 3D scatter plots of starting points vs control and value.
+2. Plot 2D projections of the above, projected onto x, y plane.
+3. Train the net.
+4. Redo 1 and 2 but this time with init_xs, init_us.
+
+
+A few points:
+
+    Vary the cost weights.
+    While warmstarting, use either or both initial guesses for xs and us.
+    use double relu and then tanh
