@@ -1,2 +1,0 @@
-this was wrong, becuase we took the entire state.
-The job was to take initialx, initialy and intila velocity.
