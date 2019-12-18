@@ -8,13 +8,7 @@ Initial research for Crocoddyl.
 
 3: Optimizing with a log barrier. Given a function, f(x) add a log(f(x)) in optimization.
 
-4: Optmization is mostly inverting matrices. And most matrices are just 90% full of zeroes. So adding, subtracting, multiplying zeroes
-
-    leads to waste of time. Sparsity-> matrices full of zeroes.
-
-    Markovian and non Markovian problems and transforming a Markovian problem into non Markovian problems.
-
-    Sparsity of cost matrices
+4: Optmization is mostly inverting matrices. And most matrices are just 90% full of zeroes. So adding, subtracting, multiplying zeroes leads to waste of time. Sparsity-> matrices full of zeroes. Markovian and non Markovian problems and transforming a Markovian problem into non Markovian problems. Sparsity of cost matrices
 
 5: https://www.stat.cmu.edu/~ryantibs/convexopt-S15/scribes/
 
