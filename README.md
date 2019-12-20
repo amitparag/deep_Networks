@@ -1,3 +1,7 @@
+The deeper_networks branch has crocoddyl devel version
+The master branch has robotpkg-py36-crocoddyl version
+
+
 Optimal_learning: Pinocchio and Crocoddyl.
 
 Initial research for Crocoddyl.
